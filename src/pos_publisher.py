@@ -12,11 +12,12 @@ s_pub = rospy.Publisher('/start_position', PoseStamped, queue_size=1)
 g_pub = rospy.Publisher('/goal_position', PoseStamped, queue_size=1)
 
 s = PoseStamped()
-s.pose.position.x = s.pose.position.y = 15
+s.pose.position.x = 15
+s.pose.position.y = 20
 
 g = PoseStamped()
 g.pose.position.x = 13
-g.pose.position.y = 15
+g.pose.position.y = 20
 
 x = Int32MultiArray()
 
