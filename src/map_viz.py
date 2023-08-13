@@ -8,6 +8,8 @@ from std_msgs.msg import Int32MultiArray
 
 path = None
 def map_callback(msg):
+    global path
+    print("map received")
     width = msg.info.width
     height = msg.info.height
     resolution = msg.info.resolution
@@ -15,12 +17,15 @@ def map_callback(msg):
     
     map_array[300 * width + 300] = 200
 
-    if not(path is None):
-        for _ in path:
-            map_array[_] = 200
+    while path is None:
+        print("path not availble")
+        # return
+    print("path",path)
+    for _ in path:
+        map_array[_] = 200
     
     map_data = map_array.reshape((height, width))
-    
+    print(">",np.where(map_data==200))
     plt.imshow(map_data, cmap='gray', origin='lower', extent=(0, width*resolution, 0, height*resolution))
     plt.colorbar()
     plt.title('Occupancy Grid Map')
@@ -31,13 +36,12 @@ def map_callback(msg):
 def path_callback(msg):
     global path
     path = msg.data
+    print("path received")
 
 def main():
-    rospy.init_node('map_visualizer', anonymous=True)
+    rospy.init_node('map_viz')
     
-    map_topic = "/map"  # Change this to the actual map topic
-    
-    rospy.Subscriber(map_topic, OccupancyGrid, map_callback)
+    rospy.Subscriber("/map", OccupancyGrid, map_callback)
     rospy.Subscriber("/path", Int32MultiArray, path_callback)
     
     rospy.spin()
