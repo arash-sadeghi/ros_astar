@@ -50,11 +50,12 @@ class AStarPathPlanner:
 
             if current == self.goal:
                 path = []
-                print(f"came_from {came_from}")
+                # print(f"came_from {came_from}")
                 while current in came_from:
                     path.append(current)
                     current = came_from[current]
                 path.append(self.start)
+                # print(f"path {path}")
                 path.reverse()
                 return path
 
@@ -97,6 +98,7 @@ class AStarPathPlanner:
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
             path = self.astar()
+            print(path,"<")
             self.publish_path(path)
             rate.sleep()
 
